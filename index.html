@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>ABC Kitchen · Farm-picked, kitchen-crafted</title>
+<meta name="description" content="A short seasonal menu, sourced from local farms. Dine in, take away, or delivered warm to your door." />
+<meta name="theme-color" content="#15803D" />
+<link rel="manifest" href="manifest.json" />
+<link rel="icon" type="image/svg+xml" href="favicon.svg" />
+<meta property="og:title" content="ABC Kitchen" />
+<meta property="og:description" content="Farm-picked, kitchen-crafted." />
+<meta property="og:image" content="img/2.jpeg" />
+<meta property="og:type" content="website" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700&family=Raleway:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="css/style.css?v=3" />
+</head>
+<body data-page="home">
+
+<header class="nav" role="banner">
+  <div class="nav__inner">
+    <a href="index.html" class="brand" aria-label="ABC Kitchen home">
+      <span class="brand__mark">a</span>
+      <span class="brand__word" data-brand>ABC Kitchen</span>
+    </a>
+    <nav class="nav__links" aria-label="Primary">
+      <a href="index.html" class="active">Home</a>
+      <a href="menu.html">Menu</a>
+      <a href="#story">Story</a>
+      <a href="#contact">Visit</a>
+    </nav>
+    <div class="nav__cta">
+      <a href="menu.html" class="btn btn--primary btn--sm">Order Online</a>
+    </div>
+    <button class="nav__burger" aria-label="Open navigation" aria-expanded="false" id="burgerBtn"></button>
+  </div>
+</header>
+
+<div class="drawer" aria-label="Mobile navigation">
+  <button class="drawer__close" aria-label="Close menu" id="drawerCloseBtn"></button>
+  <nav>
+    <a href="index.html" class="active" id="dn-home"></a>
+    <a href="menu.html" id="dn-menu"></a>
+    <a href="#story" id="dn-story"></a>
+    <a href="#contact" id="dn-visit"></a>
+    <a data-wa target="_blank" rel="noopener" id="dn-wa"></a>
+  </nav>
+  <div class="drawer__cta">
+    <a href="menu.html" class="btn btn--primary btn--block">Order Online</a>
+    <a data-wa target="_blank" rel="noopener" class="btn btn--ghost btn--block">Chat on WhatsApp</a>
+  </div>
+  <p class="drawer__foot" data-tagline>Farm-picked, kitchen-crafted.</p>
+</div>
+
+<main>
+  <section id="renderHero" class="hero"></section>
+  <section id="renderFeatured" class="block block--white"></section>
+  <section id="story" class="block block--dark">
+    <div id="renderStory"></div>
+  </section>
+  <section id="renderValues" class="block block--mint"></section>
+  <section id="renderGallery" class="block block--white"></section>
+  <section id="renderTestimonials" class="block"></section>
+  <section id="contact" class="block block--white">
+    <div id="renderContact"></div>
+  </section>
+  <section id="renderReviewForm" class="block block--mint"></section>
+</main>
+
+<footer class="footer" role="contentinfo">
+  <div class="container">
+    <div class="footer__grid">
+      <div>
+        <a href="index.html" class="brand" aria-label="ABC Kitchen home">
+          <span class="brand__mark">a</span>
+          <span class="brand__word" data-brand>ABC Kitchen</span>
+        </a>
+        <p style="margin-top:14px;font-size:14px;color:rgba(220,252,231,.7);max-width:34ch" data-tagline>Farm-picked, kitchen-crafted.</p>
+      </div>
+      <div>
+        <h5>Explore</h5>
+        <a href="menu.html">Menu</a>
+        <a href="#story">Story</a>
+        <a href="#contact">Visit</a>
+      </div>
+      <div>
+        <h5>Follow</h5>
+        <div class="socials">
+          <a href="#" aria-label="Instagram" id="s-ig"></a>
+          <a href="#" aria-label="Facebook" id="s-fb"></a>
+          <a href="#" aria-label="YouTube" id="s-yt"></a>
+        </div>
+      </div>
+    </div>
+    <div class="footer__bar">© <span data-year></span> <span data-brand>ABC Kitchen</span>. All rights reserved.</div>
+  </div>
+</footer>
+
+<nav class="pill-nav" aria-label="Quick navigation">
+  <a href="index.html" class="active" id="pn-home"></a>
+  <a href="menu.html" id="pn-menu"></a>
+  <a href="#story" id="pn-story"></a>
+  <a href="#contact" id="pn-visit"></a>
+</nav>
+
+<a class="wa-fab" data-wa target="_blank" rel="noopener" aria-label="Chat on WhatsApp" id="wa-fab"></a>
+
+<div class="modal" id="loginModal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="loginTitle">
+  <div class="modal__backdrop" data-modal-close></div>
+  <div class="modal__panel" id="renderLoginModal"></div>
+</div>
+
+<script src="js/site-data.js?v=3"></script>
+<script src="js/supabase-client.js?v=3"></script>
+<script src="js/backend.js?v=3"></script>
+<script src="js/app.js?v=3"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const set = (id, iconKey, label, showLabel) => { const el = document.getElementById(id); if (el) el.innerHTML = icon(iconKey) + (showLabel !== false ? '<span>'+label+'</span>' : ''); };
+    set('burgerBtn', 'menu', '', false);
+    set('drawerCloseBtn', 'x', '', false);
+    set('pn-home','home','Home');
+    set('pn-menu','utensils','Menu');
+    set('pn-story','leaf','Story');
+    set('pn-visit','map','Visit');
+    set('dn-home','home','Home');
+    set('dn-menu','utensils','Menu');
+    set('dn-story','leaf','Our story');
+    set('dn-visit','map','Visit');
+    set('dn-wa','wa','WhatsApp');
+    document.getElementById('wa-fab').innerHTML = icon('wa');
+    document.getElementById('s-ig').innerHTML = icon('ig');
+    document.getElementById('s-fb').innerHTML = icon('fb');
+    document.getElementById('s-yt').innerHTML = icon('yt');
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Menu · ABC Kitchen</title>
+<meta name="description" content="Browse our seasonal menu. Order for delivery, takeaway, or dine in." />
+<meta name="theme-color" content="#15803D" />
+<link rel="manifest" href="manifest.json" />
+<link rel="icon" type="image/svg+xml" href="favicon.svg" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700&family=Raleway:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="css/style.css?v=3" />
+</head>
+<body data-page="menu">
+
+<header class="nav" role="banner">
+  <div class="nav__inner">
+    <a href="index.html" class="brand" aria-label="ABC Kitchen home">
+      <span class="brand__mark">a</span>
+      <span class="brand__word" data-brand>ABC Kitchen</span>
+    </a>
+    <nav class="nav__links" aria-label="Primary">
+      <a href="index.html">Home</a>
+      <a href="menu.html" class="active">Menu</a>
+      <a href="index.html#story">Story</a>
+      <a href="index.html#contact">Visit</a>
+    </nav>
+    <div class="nav__cta">
+      <a data-wa target="_blank" rel="noopener" class="btn btn--ghost btn--sm">WhatsApp</a>
+    </div>
+    <button class="nav__burger" aria-label="Open navigation" aria-expanded="false" id="burgerBtn"></button>
+  </div>
+</header>
+
+<div class="drawer" aria-label="Mobile navigation">
+  <button class="drawer__close" aria-label="Close menu" id="drawerCloseBtn"></button>
+  <nav>
+    <a href="index.html" id="dn-home"></a>
+    <a href="menu.html" class="active" id="dn-menu"></a>
+    <a href="index.html#story" id="dn-story"></a>
+    <a href="index.html#contact" id="dn-visit"></a>
+    <a data-wa target="_blank" rel="noopener" id="dn-wa"></a>
+  </nav>
+</div>
+
+<main>
+  <section id="renderMenu"></section>
+</main>
+
+<footer class="footer" role="contentinfo">
+  <div class="container">
+    <div class="footer__grid">
+      <div>
+        <a href="index.html" class="brand" aria-label="ABC Kitchen home">
+          <span class="brand__mark">a</span>
+          <span class="brand__word" data-brand>ABC Kitchen</span>
+        </a>
+        <p style="margin-top:14px;font-size:14px;color:rgba(220,252,231,.7);max-width:34ch" data-tagline>Farm-picked, kitchen-crafted.</p>
+      </div>
+      <div>
+        <h5>Explore</h5>
+        <a href="index.html">Home</a>
+        <a href="menu.html">Menu</a>
+        <a href="index.html#contact">Visit</a>
+      </div>
+      <div>
+        <h5>Follow</h5>
+        <div class="socials">
+          <a href="#" aria-label="Instagram" id="s-ig"></a>
+          <a href="#" aria-label="Facebook" id="s-fb"></a>
+          <a href="#" aria-label="YouTube" id="s-yt"></a>
+        </div>
+      </div>
+    </div>
+    <div class="footer__bar">© <span data-year></span> <span data-brand>ABC Kitchen</span>. All rights reserved.</div>
+  </div>
+</footer>
+
+<nav class="pill-nav" aria-label="Quick navigation">
+  <a href="index.html" id="pn-home"></a>
+  <a href="menu.html" class="active" id="pn-menu"></a>
+  <a href="index.html#story" id="pn-story"></a>
+  <a href="index.html#contact" id="pn-visit"></a>
+</nav>
+
+<button class="cart-fab" onclick="openCart()" aria-label="Open cart">
+  <span class="cart-fab__ic" id="cf-ic"><span class="cart-fab__count">0</span></span>
+  <span class="cart-fab__text">View basket<b>₹0</b></span>
+</button>
+
+<a class="wa-fab" data-wa target="_blank" rel="noopener" aria-label="Chat on WhatsApp" id="wa-fab"></a>
+
+<aside class="cart-panel" role="dialog" aria-modal="true" aria-labelledby="cartTitle">
+  <div class="cart-panel__head">
+    <h3 id="cartTitle">Your basket</h3>
+    <button class="btn--icon" onclick="closeCart()" aria-label="Close basket" id="cartCloseBtn"></button>
+  </div>
+  <div class="cart-panel__body" id="cartBody"></div>
+  <div class="cart-panel__foot">
+    <div class="cart-modes" role="radiogroup" aria-label="Order type">
+      <button class="cart-mode-btn active" data-mode="Takeaway" onclick="setMode('Takeaway')" role="radio"><span id="cm-takeaway"></span><span>Takeaway</span></button>
+      <button class="cart-mode-btn" data-mode="Delivery" onclick="setMode('Delivery')" role="radio"><span id="cm-delivery"></span><span>Delivery</span></button>
+      <button class="cart-mode-btn" data-mode="Dine-in" onclick="setMode('Dine-in')" role="radio"><span id="cm-dine"></span><span>Dine-in</span></button>
+    </div>
+    <div class="cart-summary" id="cartSummary"></div>
+    <button class="btn btn--primary btn--block" onclick="checkoutWA()"><span id="cb-wa"></span> Send order on WhatsApp</button>
+    <button class="btn btn--ghost btn--block" style="margin-top:8px" onclick="if(confirm('Clear the basket?')){clearCart();closeCart();}">Clear basket</button>
+  </div>
+</aside>
+
+<script src="js/site-data.js?v=3"></script>
+<script src="js/supabase-client.js?v=3"></script>
+<script src="js/backend.js?v=3"></script>
+<script src="js/app.js?v=3"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const set = (id, iconKey, label, showLabel) => { const el = document.getElementById(id); if (el) el.innerHTML = icon(iconKey) + (showLabel !== false ? '<span>'+label+'</span>' : ''); };
+    set('burgerBtn','menu','',false);
+    set('drawerCloseBtn','x','',false);
+    set('cartCloseBtn','x','',false);
+    set('pn-home','home','Home');
+    set('pn-menu','utensils','Menu');
+    set('pn-story','leaf','Story');
+    set('pn-visit','map','Visit');
+    set('dn-home','home','Home');
+    set('dn-menu','utensils','Menu');
+    set('dn-story','leaf','Our story');
+    set('dn-visit','map','Visit');
+    set('dn-wa','wa','WhatsApp');
+    document.getElementById('wa-fab').innerHTML = icon('wa');
+    document.getElementById('s-ig').innerHTML = icon('ig');
+    document.getElementById('s-fb').innerHTML = icon('fb');
+    document.getElementById('s-yt').innerHTML = icon('yt');
+    // cart icon inside FAB
+    const cfIc = document.getElementById('cf-ic');
+    if (cfIc){
+      const badge = cfIc.querySelector('.cart-fab__count');
+      cfIc.innerHTML = icon('cart','icon--sm');
+      cfIc.appendChild(badge);
+    }
+    document.getElementById('cm-takeaway').innerHTML = icon('utensils','icon--sm');
+    document.getElementById('cm-delivery').innerHTML = icon('truck','icon--sm');
+    document.getElementById('cm-dine').innerHTML = icon('home','icon--sm');
+    document.getElementById('cb-wa').innerHTML = icon('wa','icon--sm');
+  });
+</script>
+</body>
+</html>

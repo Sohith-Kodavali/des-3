@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta name="robots" content="noindex, nofollow" />
+<title>Admin · ABC Kitchen</title>
+<meta name="theme-color" content="#0F5F2C" />
+<link rel="icon" type="image/svg+xml" href="favicon.svg" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700&family=Raleway:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="css/style.css?v=3" />
+<link rel="stylesheet" href="css/admin.css?v=3" />
+</head>
+<body class="ad-body" data-page="admin">
+
+<!-- LOGIN -->
+<div id="adLogin" class="ad-login">
+  <div class="ad-login__card">
+    <div class="ad-login__brand">
+      <span class="brand__mark">a</span>
+      <span class="brand__word" data-brand>ABC Kitchen</span>
+    </div>
+    <p class="ad-login__eyebrow">Kitchen dashboard</p>
+    <h1>Welcome back.</h1>
+    <p class="ad-login__lead">Sign in to see live orders, reservations and reviews.</p>
+    <form id="adLoginForm" class="ad-form" onsubmit="return adLogin(event)">
+      <div class="ad-field">
+        <label for="adPass">Password</label>
+        <input id="adPass" type="password" required placeholder="•••••••••" autocomplete="current-password" />
+      </div>
+      <button type="submit" class="btn btn--primary btn--block">Enter</button>
+      <p class="ad-hint">Default password: <code>admin1234</code>. Change it in <code>Settings</code> after first login.</p>
+    </form>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="adDash" class="ad-dash" hidden>
+  <header class="ad-head">
+    <div class="ad-head__brand">
+      <span class="brand__mark">a</span>
+      <span class="brand__word" data-brand>ABC Kitchen</span>
+    </div>
+    <div class="ad-head__meta">
+      <span class="ad-live" id="adLive"><span class="ad-live__dot"></span> Live</span>
+      <button class="ad-icon-btn" onclick="adLogout()" aria-label="Sign out" title="Sign out" id="adLogoutBtn"></button>
+    </div>
+  </header>
+
+  <nav class="ad-tabs" role="tablist">
+    <button class="ad-tab active" data-tab="orders" role="tab">
+      <span class="ad-tab__ic" id="tab-ic-orders"></span>
+      <span>Orders</span>
+      <span class="ad-tab__badge" id="tabBadgeOrders" hidden>0</span>
+    </button>
+    <button class="ad-tab" data-tab="reservations" role="tab">
+      <span class="ad-tab__ic" id="tab-ic-res"></span>
+      <span>Reservations</span>
+      <span class="ad-tab__badge" id="tabBadgeRes" hidden>0</span>
+    </button>
+    <button class="ad-tab" data-tab="reviews" role="tab">
+      <span class="ad-tab__ic" id="tab-ic-rev"></span>
+      <span>Reviews</span>
+      <span class="ad-tab__badge" id="tabBadgeRev" hidden>0</span>
+    </button>
+    <button class="ad-tab" data-tab="menu" role="tab">
+      <span class="ad-tab__ic" id="tab-ic-menu"></span>
+      <span>Menu</span>
+    </button>
+    <button class="ad-tab" data-tab="settings" role="tab">
+      <span class="ad-tab__ic" id="tab-ic-set"></span>
+      <span>Settings</span>
+    </button>
+  </nav>
+
+  <div class="ad-connect" id="adConnect">
+    <div>
+      <b>Supabase not connected.</b>
+      <span>Add project URL + anon key in <code>js/supabase-client.js</code>. Until then the dashboard shows local sample data only.</span>
+    </div>
+  </div>
+
+  <main class="ad-main">
+    <!-- ORDERS -->
+    <section class="ad-panel active" id="panel-orders" role="tabpanel">
+      <div class="ad-toolbar">
+        <div class="ad-filter">
+          <button class="ad-chip active" data-status="all">All</button>
+          <button class="ad-chip" data-status="new">New</button>
+          <button class="ad-chip" data-status="preparing">Preparing</button>
+          <button class="ad-chip" data-status="ready">Ready</button>
+          <button class="ad-chip" data-status="completed">Completed</button>
+        </div>
+        <button class="btn btn--ghost btn--sm" onclick="loadOrders()"><span id="btn-refresh-ic"></span> Refresh</button>
+      </div>
+      <div class="ad-list" id="ordersList">
+        <div class="ad-empty">Loading orders…</div>
+      </div>
+    </section>
+
+    <!-- RESERVATIONS -->
+    <section class="ad-panel" id="panel-reservations" role="tabpanel">
+      <div class="ad-list" id="reservationsList"><div class="ad-empty">Loading reservations…</div></div>
+    </section>
+
+    <!-- REVIEWS -->
+    <section class="ad-panel" id="panel-reviews" role="tabpanel">
+      <div class="ad-list" id="reviewsList"><div class="ad-empty">Loading reviews…</div></div>
+    </section>
+
+    <!-- MENU -->
+    <section class="ad-panel" id="panel-menu" role="tabpanel">
+      <div class="ad-toolbar">
+        <p class="ad-note">Live menu items served on the customer site.</p>
+        <button class="btn btn--primary btn--sm" onclick="openMenuEditor()"><span id="btn-add-ic"></span> Add item</button>
+      </div>
+      <div class="ad-list" id="menuList"><div class="ad-empty">Loading menu…</div></div>
+    </section>
+
+    <!-- SETTINGS -->
+    <section class="ad-panel" id="panel-settings" role="tabpanel">
+      <form id="settingsForm" class="ad-form ad-form--stacked" onsubmit="return saveSettings(event)">
+        <h3>Brand</h3>
+        <div class="ad-field"><label>Restaurant name</label><input id="setBrand" type="text" /></div>
+        <div class="ad-field"><label>Tagline</label><input id="setTagline" type="text" /></div>
+
+        <h3>Contact</h3>
+        <div class="ad-field"><label>Phone</label><input id="setPhone" type="tel" /></div>
+        <div class="ad-field"><label>WhatsApp number (with country code, no + or space)</label><input id="setWa" type="tel" pattern="[0-9]{10,15}" /></div>
+        <div class="ad-field"><label>Address</label><textarea id="setAddress" rows="2"></textarea></div>
+
+        <h3>Hours</h3>
+        <div class="ad-row">
+          <div class="ad-field"><label>Opens</label><input id="setOpen" type="time" /></div>
+          <div class="ad-field"><label>Closes</label><input id="setClose" type="time" /></div>
+        </div>
+        <div class="ad-field"><label>Hours label (shown on site)</label><input id="setHours" type="text" /></div>
+
+        <h3>Security</h3>
+        <div class="ad-field">
+          <label>Change admin password (leave blank to keep current)</label>
+          <input id="setPass" type="password" autocomplete="new-password" placeholder="New password" />
+        </div>
+
+        <button type="submit" class="btn btn--primary">Save settings</button>
+      </form>
+    </section>
+  </main>
+
+  <!-- Menu editor modal -->
+  <div class="modal" id="menuModal" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="modal__backdrop" data-modal-close></div>
+    <div class="modal__panel">
+      <button class="modal__close" data-modal-close aria-label="Close" id="menuModalClose"></button>
+      <h3 id="menuModalTitle">Add menu item</h3>
+      <form id="menuForm" class="ad-form ad-form--stacked" onsubmit="return saveMenuItem(event)">
+        <input type="hidden" id="mi_id" />
+        <div class="ad-field"><label>Name</label><input id="mi_name" type="text" required /></div>
+        <div class="ad-row">
+          <div class="ad-field"><label>Category</label><select id="mi_category"></select></div>
+          <div class="ad-field"><label>Diet</label><select id="mi_diet"><option value="veg">Veg</option><option value="nonveg">Non-veg</option></select></div>
+        </div>
+        <div class="ad-field"><label>Description</label><textarea id="mi_desc" rows="2"></textarea></div>
+        <div class="ad-row">
+          <div class="ad-field"><label>Price (₹)</label><input id="mi_price" type="number" min="0" required /></div>
+          <div class="ad-field"><label>Sort order</label><input id="mi_sort" type="number" min="0" value="100" /></div>
+        </div>
+        <div class="ad-field"><label>Image path or URL</label><input id="mi_image" type="text" placeholder="img/3.jpeg" /></div>
+        <div class="ad-field"><label>Tag (optional)</label><input id="mi_tag" type="text" placeholder="Signature, Popular, Sharing…" /></div>
+        <div class="ad-field ad-field--check"><label><input type="checkbox" id="mi_featured" /> Featured on home page</label></div>
+        <div class="ad-field ad-field--check"><label><input type="checkbox" id="mi_available" checked /> Available to order</label></div>
+        <div class="ad-actions">
+          <button type="button" class="btn btn--ghost" data-modal-close>Cancel</button>
+          <button type="submit" class="btn btn--primary">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Order details drawer -->
+  <div class="modal" id="orderModal" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="modal__backdrop" data-modal-close></div>
+    <div class="modal__panel" id="orderModalBody"></div>
+  </div>
+</div>
+
+<script src="js/site-data.js?v=3"></script>
+<script src="js/supabase-client.js?v=3"></script>
+<script src="js/backend.js?v=3"></script>
+<script src="js/app.js?v=3"></script>
+<script src="js/admin.js?v=3"></script>
+</body>
+</html>
